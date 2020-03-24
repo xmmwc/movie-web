@@ -67,6 +67,4 @@ export const ioFactory = (baseURL) => {
   }
 }
 
-const io = ioFactory('http://xmmwc.myqnapcloud.com:9900')
-
-export default io
+export default ioFactory
