@@ -13,7 +13,7 @@
               <div class="movie-sub-title">{{value.tm_db_info.original_title}}</div>
             </div>
             <div class="movie-btn">
-              <a class="movie-download" :href="value.movie_info.link">下载</a>
+              <a class="movie-download" :href="link">下载</a>
             </div>
           </div>
           <div class="movie-desc">{{value.tm_db_info.overview}}</div>
@@ -66,6 +66,11 @@ export default {
       style.transform = `translateY(${y}px) scale(${scale})`
       style.boxShadow = `0 0 120px rgba(0, 0, 0, ${opacity})`
       return style
+    },
+    link() {
+      const name = encodeURIComponent('下载')
+      const magnets = this.value.movie_info.link
+      return `shortcuts://run-shortcut?name=${name}&input=${magnets}`
     }
   },
   methods: {
@@ -98,7 +103,7 @@ export default {
         transform: translateY(100px) scale(0.85);
         box-shadow: 0 0 120px rgba($color: #000000, $alpha: 0.8);
         background-color: #000;
-        z-index: 3;
+        z-index: 1;
         transition: all 0.2s;
       }
 
@@ -106,7 +111,6 @@ export default {
         position: relative;
         width: 100%;
         height: 1070px;
-        z-index: 1;
         overflow: hidden;
         background-color: #000;
 
@@ -128,7 +132,6 @@ export default {
         padding: 95px 45px 120px;
         box-sizing: border-box;
         background-color: #fff;
-        z-index: 2;
 
         .movie-head {
           display: flex;

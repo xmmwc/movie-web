@@ -22,6 +22,7 @@ export default {
     this.$swiper = new Swiper(list, {
       wrapperClass: 'movie-wrapper',
       slideClass: 'movie-item',
+      speed: 0,
       lazy: {
         loadPrevNext: true
       }
