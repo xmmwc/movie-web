@@ -9,21 +9,26 @@
         <div class="movie-info">
           <div class="movie-head">
             <div class="movie-title">
-              <div class="movie-main-title">
-                <strong class="movie-star">{{value.tm_db_info.rating_average}}</strong>
-                {{value.tm_db_info.title}}
-              </div>
+              <div class="movie-main-title">{{value.tm_db_info.title}}</div>
               <div class="movie-sub-title">{{value.tm_db_info.original_title}}</div>
             </div>
-            <div class="movie-btn">
-              <a class="movie-download" :href="link">下载</a>
+            <div class="movie-rate">
+              <strong class="movie-star">{{value.tm_db_info.rating_average}}</strong>
             </div>
+            <!-- <div class="movie-btn">
+              <a class="movie-download btn" :href="getShortcutsLink(topRatedMovie)">下载</a>
+            </div> -->
           </div>
           <div class="movie-desc">{{value.tm_db_info.overview}}</div>
-          <div class="movie-origin-info">
-            <div class="movie-file-title">{{value.movie_info.origin_title}}</div>
-            <div class="movie-file-tags">
-              <span class="movie-file-tag" v-for="(tag, index) in movieTag" :key="index">{{tag}}</span>
+          <div class="movie-origin-info" v-for="(movie, index) in value.movie_info" :key="index">
+            <div class="movie-origin-head">
+              <div class="movie-file-title">{{movie.origin_title}}</div>
+              <div class="movie-file-tags">
+                <span class="movie-file-tag" v-for="(tag, index) in getMovieTags(movie)" :key="index">{{tag}}</span>
+              </div>
+            </div>
+            <div class="movie-origin-btn">
+              <a class="movie-download btn" :href="getShortcutsLink(movie)">下载</a>
             </div>
           </div>
         </div>
@@ -76,13 +81,8 @@ export default {
       style.boxShadow = `0 0 120px rgba(0, 0, 0, ${opacity})`
       return style
     },
-    movieTag() {
-      return _.values(_.pick(this.value.movie_info, ['year', 'res', 'quality', 'codec', 'sound', 'author'])).map(value => value.toUpperCase())
-    },
-    link() {
-      const name = encodeURIComponent('下载')
-      const magnets = encodeURIComponent(this.value.movie_info.link)
-      return `shortcuts://run-shortcut?name=${name}&input=${magnets}`
+    topRatedMovie() {
+      return this.value.movie_info[0]
     }
   },
   methods: {
@@ -90,6 +90,14 @@ export default {
       this.$nextTick(() => {
         this.coverProgress = progress
       })
+    },
+    getMovieTags(movie) {
+      return _.values(_.pick(movie, ['year', 'res', 'quality', 'codec', 'sound', 'author'])).map(value => value.toUpperCase())
+    },
+    getShortcutsLink(movie) {
+      const name = encodeURIComponent('下载')
+      const magnets = encodeURIComponent(movie.link)
+      return `shortcuts://run-shortcut?name=${name}&input=${magnets}`
     }
   }
 }
@@ -158,16 +166,10 @@ export default {
               height: 1.5em;
               line-height: 1.5em;
               font-size: 45px;
-              max-width: 520px;
+              max-width: 500px;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
-
-              .movie-star {
-                font-size: 45px;
-                color: #e09015;
-                padding: 0 5px 0 0;
-              }
             }
 
             .movie-sub-title {
@@ -176,76 +178,94 @@ export default {
             }
           }
 
-          .movie-btn {
+          .movie-star {
+            font-size: 85px;
+            color: #e09015;
+            padding: 0 0 0 15px;
             flex-shrink: 0;
-            a {
-              display: inline-block;
-              line-height: 1;
-              white-space: nowrap;
-              cursor: pointer;
-              background: #fff;
-              border: 2px solid #dcdfe6;
-              -webkit-appearance: none;
-              text-align: center;
-              box-sizing: border-box;
-              outline: none;
-              margin: 0;
-              font-weight: 500;
-              -moz-user-select: none;
-              -webkit-user-select: none;
-              -ms-user-select: none;
-              padding: 24px 40px;
-              font-size: 28px;
-              border-radius: 8px;
-              color: #fff;
-              background-color: #409eff;
-              border-color: #409eff;
-            }
+          }
 
-            a,
-            a:link,
-            a:visited {
-              color: #fff;
-              text-decoration: none;
-            }
+          .movie-btn {
+            padding: 0 15px;
+            flex-shrink: 0;
           }
         }
 
         .movie-origin-info {
-          margin-top: 45px;
+          padding-top: 25px;
+          margin-bottom: 20px;
           word-break: break-all;
+          border-top: 1px solid #e1e1e1;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
 
-          .movie-file-title {
-            font-size: 28px;
-            color: #999;
+          .movie-origin-head {
+            .movie-file-title {
+              font-size: 28px;
+              color: #999;
+            }
+
+            .movie-file-tags {
+              margin-top: 15px;
+
+              .movie-file-tag {
+                display: inline-block;
+                background-color: #67c23a;
+                color: #fff;
+                margin-right: 15px;
+                margin-bottom: 15px;
+                font-size: 28px;
+                padding: 5px 10px;
+                border-radius: 6px;
+              }
+            }
           }
 
-          .movie-file-tags {
-            margin-top: 15px;
-            // height: 57px;
-            // white-space: nowrap;
-            // text-overflow: ellipsis;
-            // overflow: hidden;
-
-            .movie-file-tag {
-              display: inline-block;
-              background-color: #67c23a;
-              color: #fff;
-              margin-right: 15px;
-              margin-bottom: 15px;
-              font-size: 28px;
-              padding: 5px 10px;
-              border-radius: 6px;
-            }
+          .movie-origin-btn {
+            padding: 0 15px;
+            flex-shrink: 0;
           }
         }
 
         .movie-desc {
           font-size: 32px;
           margin-top: 35px;
+          margin-bottom: 45px;
         }
       }
     }
+  }
+
+  a.btn {
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 2px solid #dcdfe6;
+    -webkit-appearance: none;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+    margin: 0;
+    font-weight: 500;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    padding: 24px 40px;
+    font-size: 28px;
+    border-radius: 8px;
+    color: #fff;
+    background-color: #409eff;
+    border-color: #409eff;
+  }
+
+  a,
+  a:link,
+  a:visited {
+    color: #fff;
+    text-decoration: none;
   }
 }
 </style>
