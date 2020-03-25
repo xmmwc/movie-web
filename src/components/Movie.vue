@@ -9,7 +9,10 @@
         <div class="movie-info">
           <div class="movie-head">
             <div class="movie-title">
-              <div class="movie-main-title">{{value.tm_db_info.title}}</div>
+              <div class="movie-main-title">
+                <strong class="movie-star">{{value.tm_db_info.rating_average}}</strong>
+                {{value.tm_db_info.title}}
+              </div>
               <div class="movie-sub-title">{{value.tm_db_info.original_title}}</div>
             </div>
             <div class="movie-btn">
@@ -17,6 +20,12 @@
             </div>
           </div>
           <div class="movie-desc">{{value.tm_db_info.overview}}</div>
+          <div class="movie-origin-info">
+            <div class="movie-file-title">{{value.movie_info.origin_title}}</div>
+            <div class="movie-file-tags">
+              <span class="movie-file-tag" v-for="(tag, index) in movieTag" :key="index">{{tag}}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -67,9 +76,12 @@ export default {
       style.boxShadow = `0 0 120px rgba(0, 0, 0, ${opacity})`
       return style
     },
+    movieTag() {
+      return _.values(_.pick(this.value.movie_info, ['year', 'res', 'quality', 'codec', 'sound', 'author'])).map(value => value.toUpperCase())
+    },
     link() {
       const name = encodeURIComponent('下载')
-      const magnets = this.value.movie_info.link
+      const magnets = encodeURIComponent(this.value.movie_info.link)
       return `shortcuts://run-shortcut?name=${name}&input=${magnets}`
     }
   },
@@ -117,7 +129,7 @@ export default {
         .movie-blur-bg {
           width: 100%;
           height: 100%;
-          filter: blur(10px);
+          // filter: blur(10px);
           opacity: 0.4;
           transform: scale(1.2);
           transform-origin: 50% 50%;
@@ -129,7 +141,7 @@ export default {
       .movie-info {
         position: relative;
         width: 100%;
-        padding: 95px 45px 120px;
+        padding: 55px 45px 120px;
         box-sizing: border-box;
         background-color: #fff;
 
@@ -140,8 +152,22 @@ export default {
           align-items: center;
 
           .movie-title {
+            flex-grow: 1;
+
             .movie-main-title {
+              height: 1.5em;
+              line-height: 1.5em;
               font-size: 45px;
+              max-width: 520px;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+
+              .movie-star {
+                font-size: 45px;
+                color: #e09015;
+                padding: 0 5px 0 0;
+              }
             }
 
             .movie-sub-title {
@@ -149,7 +175,9 @@ export default {
               color: #666;
             }
           }
+
           .movie-btn {
+            flex-shrink: 0;
             a {
               display: inline-block;
               line-height: 1;
@@ -179,6 +207,35 @@ export default {
             a:visited {
               color: #fff;
               text-decoration: none;
+            }
+          }
+        }
+
+        .movie-origin-info {
+          margin-top: 45px;
+          word-break: break-all;
+
+          .movie-file-title {
+            font-size: 28px;
+            color: #999;
+          }
+
+          .movie-file-tags {
+            margin-top: 15px;
+            // height: 57px;
+            // white-space: nowrap;
+            // text-overflow: ellipsis;
+            // overflow: hidden;
+
+            .movie-file-tag {
+              display: inline-block;
+              background-color: #67c23a;
+              color: #fff;
+              margin-right: 15px;
+              margin-bottom: 15px;
+              font-size: 28px;
+              padding: 5px 10px;
+              border-radius: 6px;
             }
           }
         }
