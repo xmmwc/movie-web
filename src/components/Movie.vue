@@ -92,7 +92,18 @@ export default {
       })
     },
     getMovieTags(movie) {
-      return _.values(_.pick(movie, ['year', 'res', 'quality', 'codec', 'sound', 'author'])).map(value => value.toUpperCase())
+      const tagsList = _.pick(movie, ['year', 'res', 'quality', 'codec', 'sound', 'author'])
+      const tags = _.values(tagsList).reduce((total, current) => {
+        if (current) {
+          if (_.isArray(current)) {
+            return [...total, ...current]
+          } else {
+            return [...total, current]
+          }
+        }
+        return total
+      }, [])
+      return tags.map(tag => tag.toUpperCase())
     },
     getShortcutsLink(movie) {
       const name = encodeURIComponent('下载')
