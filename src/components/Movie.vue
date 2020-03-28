@@ -64,6 +64,7 @@ export default {
       slidesPerView: 'auto',
       nested: true,
       freeMode: true,
+      freeModeMomentumBounce: false,
       on: {
         progress: (progress) => {
           this.$db(progress)
