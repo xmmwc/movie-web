@@ -14,7 +14,7 @@ import { getMovieList } from '../api'
 
 export default {
   async created() {
-    const data = await getMovieList()
+    const data = await getMovieList().catch(()=>getMovieList())
     this.movies = data.data
   },
   mounted() {

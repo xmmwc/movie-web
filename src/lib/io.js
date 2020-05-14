@@ -10,7 +10,8 @@ export const qs = (params) => {
 
 export const ioFactory = (baseURL) => {
   const config = {
-    baseURL
+    baseURL,
+    timeout: 20000
   }
   const io = axios.create(config)
 
