@@ -5,19 +5,23 @@
         <movie v-for="(item, index) in movies" :key="index" :value="item" />
       </div>
     </div>
+    <slot></slot>
   </div>
 </template>
 <script>
 import Swiper from 'swiper'
 import Movie from './Movie'
+import toast from '../lib/toast'
 import { getMovieList } from '../api'
 
 export default {
-  async created() {
-    const data = await getMovieList().catch(()=>getMovieList())
+  async created () {
+    const data = await getMovieList().catch(err => {
+      toast.toast(err.message)
+    })
     this.movies = data.data
   },
-  mounted() {
+  mounted () {
     const list = this.$el.querySelector('.movie-list')
     this.$swiper = new Swiper(list, {
       wrapperClass: 'movie-wrapper',
@@ -27,14 +31,14 @@ export default {
       }
     })
   },
-  data() {
+  data () {
     return {
       $swiper: null,
       movies: []
     }
   },
   watch: {
-    movies() {
+    movies () {
       this.$nextTick(() => {
         this.$swiper.updateSlides()
         this.$swiper.lazy.load()
