@@ -262,9 +262,7 @@ export default {
     outline: none;
     margin: 0;
     font-weight: 500;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+    user-select: none;
     padding: 24px 40px;
     font-size: 28px;
     border-radius: 8px;

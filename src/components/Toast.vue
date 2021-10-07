@@ -5,7 +5,6 @@
 </template>
 <script>
 import { toast } from '../lib/toast'
-import env from '../env'
 
 export default {
   data () {
