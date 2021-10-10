@@ -10,47 +10,45 @@
   </div>
 </template>
 <script>
-import Swiper from "swiper";
-import Movie from "./Movie";
-import toast from "../lib/toast";
-import { getMovieList } from "../api";
+import Swiper from "swiper"
+import Movie from "./Movie"
+import toast from "../lib/toast"
+import { getMovieList } from "../api"
 
 export default {
-  async created() {
-    this.loading = true;
-    const data = await getMovieList()
-      .then(() => {
-        this.loading = false;
-      })
-      .catch((err) => {
-        this.loading = false;
-        toast.toast(err.message);
-      });
-    this.movies = data.data;
+  async created () {
+    try {
+      this.loading = true
+      const data = await getMovieList()
+      this.loading = false
+      this.movies = data.data
+    } catch (err) {
+      toast.toast(err.message)
+    }
   },
-  mounted() {
-    const list = this.$el.querySelector(".movie-list");
+  mounted () {
+    const list = this.$el.querySelector(".movie-list")
     this.$swiper = new Swiper(list, {
       wrapperClass: "movie-wrapper",
       slideClass: "movie-item",
       lazy: {
         loadPrevNext: true,
       },
-    });
+    })
   },
-  data() {
+  data () {
     return {
       $swiper: null,
       loading: false,
       movies: [],
-    };
+    }
   },
   watch: {
-    movies() {
+    movies () {
       this.$nextTick(() => {
-        this.$swiper.updateSlides();
-        this.$swiper.lazy.load();
-      });
+        this.$swiper.updateSlides()
+        this.$swiper.lazy.load()
+      })
     },
   },
   components: {
@@ -63,13 +61,13 @@ export default {
   width: 100%;
   height: 100%;
 
-  .loading{
+  .loading {
     position: fixed;
-    background:rgba($color: #000000, $alpha: 0.5);
+    background: rgba($color: #000000, $alpha: 0.5);
     border-radius: 20px;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     color: #fff;
     font-size: 28rpx;
     display: flex;

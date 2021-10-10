@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="toast" v-if="toast.msg">{{toast.msg}}</div>
+    <div class="toast" v-if="toast.msg">{{ toast.msg }}</div>
   </transition>
 </template>
 <script>

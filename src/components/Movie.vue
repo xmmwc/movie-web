@@ -2,33 +2,55 @@
   <div class="movie-item">
     <div class="movie-item-wrapper">
       <div class="movie-item-slide">
-        <div class="movie-cover swiper-lazy" :data-background="value.tm_db_info.image" :style="coverStyle"></div>
+        <div
+          class="movie-cover swiper-lazy"
+          :data-background="value.tm_db_info.image"
+          :style="coverStyle"
+        ></div>
         <div class="movie-blur">
-          <div class="movie-blur-bg swiper-lazy" :data-background="value.tm_db_info.image"></div>
+          <div
+            class="movie-blur-bg swiper-lazy"
+            :data-background="value.tm_db_info.image"
+          ></div>
         </div>
         <div class="movie-info">
           <div class="movie-head">
             <div class="movie-title">
-              <div class="movie-main-title">{{value.tm_db_info.title}}</div>
-              <div class="movie-sub-title">{{value.tm_db_info.original_title}}</div>
+              <div class="movie-main-title">{{ value.tm_db_info.title }}</div>
+              <div class="movie-sub-title">
+                {{ value.tm_db_info.original_title }}
+              </div>
             </div>
             <div class="movie-rate">
-              <strong class="movie-star">{{value.tm_db_info.rating_average}}</strong>
+              <strong class="movie-star">{{
+                value.tm_db_info.rating_average
+              }}</strong>
             </div>
             <!-- <div class="movie-btn">
               <a class="movie-download btn" :href="getShortcutsLink(topRatedMovie)">下载</a>
             </div> -->
           </div>
-          <div class="movie-desc">{{value.tm_db_info.overview}}</div>
-          <div class="movie-origin-info" v-for="(movie, index) in value.movie_info" :key="index">
+          <div class="movie-desc">{{ value.tm_db_info.overview }}</div>
+          <div
+            class="movie-origin-info"
+            v-for="(movie, index) in value.movie_info"
+            :key="index"
+          >
             <div class="movie-origin-head">
-              <div class="movie-file-title">{{movie.origin_title}}</div>
+              <div class="movie-file-title">{{ movie.origin_title }}</div>
               <div class="movie-file-tags">
-                <span class="movie-file-tag" v-for="(tag, index) in getMovieTags(movie)" :key="index">{{tag}}</span>
+                <span
+                  class="movie-file-tag"
+                  v-for="(tag, index) in getMovieTags(movie)"
+                  :key="index"
+                  >{{ tag }}</span
+                >
               </div>
             </div>
             <div class="movie-origin-btn">
-              <a class="movie-download btn" :href="getShortcutsLink(movie)">下载</a>
+              <a class="movie-download btn" :href="getShortcutsLink(movie)"
+                >下载</a
+              >
             </div>
           </div>
         </div>
@@ -47,16 +69,16 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       $swiper: null,
       coverProgress: 0
     }
   },
-  created() {
+  created () {
     this.$db = _.throttle(this.changeProgress, 150)
   },
-  mounted() {
+  mounted () {
     this.$swiper = new Swiper(this.$el, {
       wrapperClass: 'movie-item-wrapper',
       slideClass: 'movie-item-slide',
@@ -73,7 +95,7 @@ export default {
     })
   },
   computed: {
-    coverStyle() {
+    coverStyle () {
       const style = {}
       const y = 100 * (1 - this.coverProgress)
       const scale = 1 - (0.15 * (1 - this.coverProgress))
@@ -82,17 +104,17 @@ export default {
       style.boxShadow = `0 0 120px rgba(0, 0, 0, ${opacity})`
       return style
     },
-    topRatedMovie() {
+    topRatedMovie () {
       return this.value.movie_info[0]
     }
   },
   methods: {
-    changeProgress(progress) {
+    changeProgress (progress) {
       this.$nextTick(() => {
         this.coverProgress = progress
       })
     },
-    getMovieTags(movie) {
+    getMovieTags (movie) {
       const tagsList = _.pick(movie, ['year', 'res', 'quality', 'codec', 'sound', 'author'])
       const tags = _.values(tagsList).reduce((total, current) => {
         if (current) {
@@ -106,7 +128,7 @@ export default {
       }, [])
       return tags.map(tag => tag.toUpperCase())
     },
-    getShortcutsLink(movie) {
+    getShortcutsLink (movie) {
       const name = encodeURIComponent('下载')
       const magnets = encodeURIComponent(movie.link)
       return `shortcuts://run-shortcut?name=${name}&input=${magnets}`
