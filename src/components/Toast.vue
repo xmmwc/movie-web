@@ -4,7 +4,7 @@
   </transition>
 </template>
 <script>
-import { toast } from '../lib/toast'
+import toast from '../lib/toast'
 
 export default {
   data () {

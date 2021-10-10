@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Toast from './Toast'
+import Toast from './components/Toast'
 import MovieList from './components/MovieList'
 export default {
   components: {
