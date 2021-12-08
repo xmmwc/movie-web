@@ -21,7 +21,10 @@ export default {
       this.loading = true
       const data = await getMovieList()
       this.loading = false
-      this.movies = data.data
+      if(data.code === 0){
+        throw new Error(data.message)
+      }
+      this.movies = data.data    
     } catch (err) {
       toast.toast(err.message)
     }

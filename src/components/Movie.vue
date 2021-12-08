@@ -39,6 +39,7 @@
             <div class="movie-origin-head">
               <div class="movie-file-title">{{ movie.origin_title }}</div>
               <div class="movie-file-tags">
+                <span class="movie-file-tag">{{movie.provider}}</span>
                 <span
                   class="movie-file-tag"
                   v-for="(tag, index) in getMovieTags(movie)"
