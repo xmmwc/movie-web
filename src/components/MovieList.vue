@@ -1,45 +1,35 @@
 <template>
   <div class="movie-box">
-    <div class="movie-list">
+    <div class="movie-list" @click="refresh">
       <div class="movie-wrapper">
         <movie v-for="(item, index) in movies" :key="index" :value="item" />
       </div>
     </div>
-    <div class="loading">加载中</div>
+    <div class="loading" v-if="loading">加载中</div>
     <slot></slot>
   </div>
 </template>
 <script>
-import Swiper from "swiper"
-import Movie from "./Movie"
-import toast from "../lib/toast"
-import { getMovieList } from "../api"
+import Swiper from 'swiper'
+import Movie from './Movie'
+import toast from '../lib/toast'
+import { getMovieList } from '../api'
 
 export default {
-  async created () {
-    try {
-      this.loading = true
-      const data = await getMovieList()
-      this.loading = false
-      if(data.code === 0){
-        throw new Error(data.message)
-      }
-      this.movies = data.data    
-    } catch (err) {
-      toast.toast(err.message)
-    }
+  async created() {
+    await this.requestMovieList()
   },
-  mounted () {
-    const list = this.$el.querySelector(".movie-list")
+  mounted() {
+    const list = this.$el.querySelector('.movie-list')
     this.$swiper = new Swiper(list, {
-      wrapperClass: "movie-wrapper",
-      slideClass: "movie-item",
+      wrapperClass: 'movie-wrapper',
+      slideClass: 'movie-item',
       lazy: {
         loadPrevNext: true,
       },
     })
   },
-  data () {
+  data() {
     return {
       $swiper: null,
       loading: false,
@@ -47,17 +37,38 @@ export default {
     }
   },
   watch: {
-    movies () {
+    movies() {
       this.$nextTick(() => {
         this.$swiper.updateSlides()
         this.$swiper.lazy.load()
       })
     },
   },
+  methods: {
+    refresh() {
+      if (this.movies.length == 0) {
+        this.requestMovieList()
+      }
+    },
+    async requestMovieList() {
+      try {
+        this.loading = true
+        const data = await getMovieList()
+        this.loading = false
+        if (data.code !== 1) {
+          throw new Error(data.message)
+        }
+        this.movies = data.data
+      } catch (err) {
+        this.loading = false
+        toast.toast(err.message)
+      }
+    },
+  },
   components: {
     Movie,
   },
-};
+}
 </script>
 <style lang="scss">
 .movie-box {
