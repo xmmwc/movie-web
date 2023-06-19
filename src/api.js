@@ -5,5 +5,6 @@ const apiHost = process.env.NODE_ENV === 'production' ? new uri().port('9900') :
 const io = factory(apiHost)
 
 export const getMovieList = () => {
-  return io.jsonp(apiHost.path('/list').toString())
+  const timestamp = Date().getTime()
+  return io.jsonp(apiHost.path(`/list?t=${timestamp}`).toString())
 }
